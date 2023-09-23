@@ -1,12 +1,12 @@
 #include <Adafruit_MPU6050.h>
 
+
 //this is how we will interact with the MPU6050 module
 Adafruit_MPU6050 mpu;
 
 //this struct will store information about 
 sensors_event_t acc;
 sensors_event_t gyro, temp;
-
 
 
 void setup() {
