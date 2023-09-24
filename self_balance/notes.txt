@@ -1,0 +1,4 @@
+Attempt - 1
+    Using Angular Velocity Values directly from the gyroscope instead of angles.
+    The output will must be angular velocity which translates to RPM for the stepper motors.
+

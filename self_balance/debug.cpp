@@ -2,8 +2,14 @@
 
 extern BluetoothSerial bt_serial;
 
-void debug_write(char* msg){
-    for(char ch = *msg; ch != NULL; ch = *(++msg)){
-        bt_serial.write(ch);
-    }
+void debug_write(String s){
+    bt_serial.println(s);
+}
+
+void debug_write_gyro_values(float x, float y, float z){
+    String sx = String(x, 3);
+    String sy = String(y, 3);
+    String sz = String(z, 3);
+    String s = String(sx +  ", "  + sy + ", " + sz);
+    bt_serial.println(s);
 }
