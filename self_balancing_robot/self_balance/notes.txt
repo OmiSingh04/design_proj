@@ -1,0 +1,48 @@
+When tuning the PID (Proportional-Integral-Derivative) control values for a self-balancing two-wheeled robot, you'll want to find the right balance of Kp, Ki, and Kd to ensure stable and responsive control. The expected observations of large or low values for these parameters are as follows:
+
+1. **Proportional Gain (Kp):**
+   - **Large Kp Value:** A large Kp value will make the robot respond strongly to the current error (angle difference from the upright position). Observations with a large Kp may include:
+     - Quick and aggressive response to disturbances or changes in tilt angle.
+     - The robot might exhibit oscillations or become unstable if Kp is too large, as it will overcorrect and then overcorrect in the opposite direction.
+     - It can lead to overshooting the upright position.
+
+   - **Low Kp Value:** A low Kp value will make the control response weaker. Observations with a low Kp may include:
+     - Sluggish response to disturbances or changes in tilt angle.
+     - Difficulty in maintaining balance, especially when external forces act on the robot.
+     - Reduced sensitivity to errors, which may result in a failure to return to the upright position quickly.
+
+2. **Integral Gain (Ki):**
+   - **Large Ki Value:** A large Ki value will amplify the integral term's contribution to the control signal. Observations with a large Ki may include:
+     - Effective in eliminating steady-state errors. The robot will have a better chance of returning to the upright position, even when there's a constant disturbance.
+     - However, too large of a Ki can lead to integral windup, causing oscillations or instability when there are significant disturbances.
+
+   - **Low Ki Value:** A low Ki value will weaken the integral control. Observations with a low Ki may include:
+     - Difficulty in eliminating steady-state errors. The robot may not return to the upright position when there's a constant disturbance.
+     - Less impact on the control signal, which may not effectively counteract external forces.
+
+3. **Derivative Gain (Kd):**
+   - **Large Kd Value:** A large Kd value will make the control system more sensitive to the rate of change of error. Observations with a large Kd may include:
+     - Effective in dampening oscillations and reducing overshoot. The robot will respond to changes in tilt angle quickly without significant overshoot.
+     - However, if Kd is too large, it can amplify measurement noise, leading to erratic behavior.
+
+   - **Low Kd Value:** A low Kd value will reduce the impact of the derivative term. Observations with a low Kd may include:
+     - Slower response to changes in tilt angle, potentially leading to oscillations or overshoot.
+     - Reduced ability to counteract disturbances that cause rapid changes in the robot's angle.
+
+Tuning PID parameters for a self-balancing two-wheeled robot often involves finding a balance between these values through experimentation and analysis. It's essential to start with conservative values and gradually increase or decrease them while observing the robot's behavior. A common approach is to use methods like the Ziegler-Nichols method or perform manual tuning to find suitable parameter values that provide stable and responsive control.
+
+
+
+
+
+Attempt - 1
+    Using Angular Velocity Values directly from the gyroscope instead of angles.
+    The output will must be angular velocity which translates to RPM for the stepper motors.
+
+    For stage - 1, it should do well. (i think)
+    For stage - 2, my 2 cents is that this PID system will fall apart. Moving probably maintains a constant angle in the moving direction the ang. vel will eventually drop, and assume 0, even when the bot is not upright.
+    
+    For stage - 2, i need angles. accurate angles. That makes this a bit mathy. But has that ever scared us? Never! (i just peed my pants.)
+
+    Perhaps when the bot is stationary, i can switch to ang. vel pid, and when the bot moves around, i switch to angles pid.
+    Because my 2 cents also include that balancing at a point will give better results with angular velocity rather than angle itself.
