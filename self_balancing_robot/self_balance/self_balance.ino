@@ -1,12 +1,14 @@
 #include "debug.h"
 #include <BluetoothSerial.h>
+#include "pid.h"
+#include "motors.h"
 #include "gyro.h"
-const char* pin = "1234";
+const char* pin = "1234";//still dont know how this shit is gonna be used.
 const char* device_name = "ESP-32-Stabletron";
 
 BluetoothSerial bt_serial;
 
-float gyroX, gyroY, gyroZ;
+float roll, pitch;
 
 void setup_bt(){
     bt_serial.begin(device_name);
@@ -29,9 +31,33 @@ void setup(){
         while(1) delay(1000);
     }
 
+    set_param(0.5, 100, 2);//idk have to change...
+
+    setup_motors();
+
+    debug_write("Ready to Departure!");
+
 }
 
 void loop(){
-    update(&gyroX, &gyroY, &gyroZ);
-    debug_write_gyro_values(gyroX, gyroY, gyroZ);
+
+    //read sensor values
+    update(&roll, &pitch);
+    debug_write_roll_pitch(roll, pitch);
+
+    //generate control
+    float control = generate_control(pitch);//based on which way the chip is placed, we will either need pitch or roll
+
+    //the output could be motor speed. + and negative for direction. so i need to translate the output of pid to 
+    float scale_control = 0.5;
+    //i hope i can find the linear relation pretty well.
+    //actuate control
+
+    //more the control, more the frequency, more the rpm.
+    //+ control - one direction, - control, other direction
+
+    (control > 0) ? set_direction(HIGH, LOW) : set_direction(LOW, HIGH);    
+
+    step(1, scale_control * control);
+    //delays can potentially cause poor response
 }

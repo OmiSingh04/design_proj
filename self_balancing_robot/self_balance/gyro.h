@@ -5,5 +5,5 @@
 #define SDA 14
 #define SCL 15
 int init_mpu(void);
-void update(float*, float*, float*);
+void update(float*, float*);
 #endif

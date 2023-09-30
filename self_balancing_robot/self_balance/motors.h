@@ -8,10 +8,9 @@
 #define LEFT_MOTOR_STEP_PIN 19
 #define LEFT_MOTOR_DIRECTION_PIN 18
 
-#define RIGHT_SLEEP_PIN 33
-#define LEFT_SLEEP_PIN 32
+void setup_motors();
+void set_direction(int, int);
+void step(int, float);
 
-#define RPM 15
-
-
+//at what rate is my control being generated?
 #endif
