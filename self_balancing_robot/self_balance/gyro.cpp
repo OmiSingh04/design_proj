@@ -1,21 +1,21 @@
 #include "gyro.h"
 #include "debug.h"
 #include <Wire.h>
-#include <Adafruit_MPU6050.h>
+#include <MPU6050.h>
 
-static Adafruit_MPU6050 mpu;
+static MPU6050 mpu;
+static int16_t accX, accY, accZ, gyroX, gyroY, gyroZ;
 
 int init_mpu(void){
 	Wire.begin(SDA, SCL);
 	debug_write("I2C SDA and SCL set to ");
-	if(!mpu.begin()){
+	mpu.initialize();
+	
+	if(!mpu.testConnection()){
 		debug_write("MPU6050 Not Found!!! Please connect and RST the controller");
 		return 0;
 	}
-
 	debug_write("MPU6050 Connected.");
-	mpu.setGyroRange(MPU6050_RANGE_250_DEG);
-	debug_write("Gyro Range Set to +- 250 deg/sec");
 	return 1;
 }
 
@@ -27,13 +27,11 @@ int init_mpu(void){
 //anyway this is probably worth a shot. But i DONT WANT IT TO FAIL
 //to minimize acceleration, i need to minimize height from the ground. fuck it
 
-void update(float* roll, float* pitch){
-	sensors_event_t g, a, t;
-	mpu.getEvent(&a, &g, &t);
+void update(float* pitch){
 
+	mpu.getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
 
   //SOLDER THE CHIP PROPERLY - can get you nan values, and then idk what this will do.
-	*roll = atan2(a.acceleration.y, a.acceleration.z);
-	*pitch = asin(a.acceleration.x / 9.81f);
+	*pitch = atan(-accX / sqrt(accY * accY + accZ * accZ)) * 180.0 / M_PI;
 
 }

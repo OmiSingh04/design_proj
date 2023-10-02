@@ -8,7 +8,7 @@ const char* device_name = "ESP-32-Stabletron";
 
 BluetoothSerial bt_serial;
 
-float roll, pitch;
+float pitch;
 
 void setup_bt(){
     bt_serial.begin(device_name);
@@ -42,8 +42,7 @@ void setup(){
 void loop(){
 
     //read sensor values
-    update(&roll, &pitch);
-    debug_write_roll_pitch(roll, pitch);
+    update(&pitch);
 
     //generate control
     float control = generate_control(pitch);//based on which way the chip is placed, we will either need pitch or roll
@@ -56,6 +55,7 @@ void loop(){
     //more the control, more the frequency, more the rpm.
     //+ control - one direction, - control, other direction
 
+    debug_write_f(pitch);
     (control > 0) ? set_direction(HIGH, LOW) : set_direction(LOW, HIGH);    
 
     step(1, scale_control * control);

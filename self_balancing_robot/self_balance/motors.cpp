@@ -2,15 +2,11 @@
 #include "debug.h"
 #include "motors.h"
 
-
-
 void setup_motors(){
-
-
   pinMode(RIGHT_MOTOR_DIRECTION_PIN, OUTPUT);
   pinMode(RIGHT_MOTOR_STEP_PIN, OUTPUT);
-  pinMode(LEFT_MOTOR_DIRECTION_PIN, OUTPUT);
   pinMode(LEFT_MOTOR_STEP_PIN, OUTPUT);
+  pinMode(LEFT_MOTOR_DIRECTION_PIN, OUTPUT);
   debug_write("Motors are Setup");
 }
 
@@ -33,11 +29,12 @@ void setup_motors(){
 void set_direction(int left, int right){
     digitalWrite(RIGHT_MOTOR_DIRECTION_PIN, right);
     digitalWrite(LEFT_MOTOR_DIRECTION_PIN, left);
-    debug_write("Invert Direction");
+    debug_write("Set Direction");
 }
 
 void step(int count, float frequency){
-  float pulse_width = 1000 / (2 * frequency);
+  if(frequency == 0) return;
+  float pulse_width = 1000.0 / (2 * frequency);
   Serial.println(pulse_width);//oh its in seconds. convert to milliseconds
     for(int i = 0; i < count; i++){
         digitalWrite(LEFT_MOTOR_STEP_PIN, HIGH);

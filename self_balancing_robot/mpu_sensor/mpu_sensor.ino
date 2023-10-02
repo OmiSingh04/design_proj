@@ -1,51 +1,27 @@
-#include <Adafruit_MPU6050.h>
 #include <Wire.h>
+#include <Kalman.h>
+#include <MPU6050.h>
 
-//this is how we will interact with the MPU6050 module
-Adafruit_MPU6050 mpu;
-
-//this struct will store information about 
-sensors_event_t acc;
-sensors_event_t gyro, temp;
-
+MPU6050 mpu;
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
-
   Wire.begin(5, 18);
-  while(!mpu.begin()){
-    Serial.println("MPU6050 not connected");
-    delay(1000);
-  }
-  mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
-  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
-  Serial.println("MPU6050 ready!");
-  delay(1000);
+  mpu.initialize();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-    mpu.getEvent(&acc, &gyro, &temp);
+  int16_t accX, accY, accZ;
+  int16_t gyroX, gyroY, gyroZ;
 
-    float roll = atan2(acc.acceleration.y, acc.acceleration.z);
-    float pitch = asin(acc.acceleration.x / 9.8);
+  mpu.getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
 
+  // Calculate pitch and roll angles using accelerometer data
+  float accPitch = atan(-accX / sqrt(accY * accY + accZ * accZ)) * 180.0 / M_PI;
 
-    Serial.print("Acc - roll ");
-    Serial.print(roll * 57296.0 / 1000);
-    Serial.print(" pitch ");
-    Serial.println(pitch * 57296.0 / 1000);
+  // Calculate gyro-based roll and pitch angles
+  Serial.print(", Acc Pitch: ");
+  Serial.print(accPitch);
 
-    delay(500);
-  
-
+  delay(10); // Adjust loop delay as needed
 }
-
-
-/*
-
-  PIN A5 - connected to SCL (Serial Clock)
-  PIN A4 - connected to SDA (Serial Data)
-
-*/
