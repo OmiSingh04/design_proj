@@ -9,9 +9,17 @@
 
 #include <Wire.h>
 #include <MPU6050.h>
-#include <KalmanFilter.h>
+#include "KalmanFilter.h"
+
+#define MPU_SENSITIVITY_2G 16384.0
 
 MPU6050 mpu;
+
+typedef struct x{
+  float XAxis;
+  float YAxis;
+  float ZAxis;
+} Vector;
 
 KalmanFilter kalmanX(0.001, 0.003, 0.03);
 KalmanFilter kalmanY(0.001, 0.003, 0.03);
@@ -24,40 +32,50 @@ float kalRoll = 0;
 
 void setup() 
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Wire.begin(5, 18);
 
   // Initialize MPU6050
-  while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
+  mpu.initialize();
+  if(!mpu.testConnection())
   {
+    while(1)
     delay(500);
   }
  
   // Calibrate gyroscope. The calibration must be at rest.
   // If you don't want calibrate, comment this line.
-  mpu.calibrateGyro();
+  mpu.CalibrateGyro();
 }
 
 void loop()
 {
-  Vector acc = mpu.readNormalizeAccel();
-  Vector gyr = mpu.readNormalizeGyro();
+
+  int16_t ax, ay, az, gx, gy, gz;
+  mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+
+  float norm_accx = float(ax) / MPU_SENSITIVITY_2G;
+  float norm_accy = float(ax) / MPU_SENSITIVITY_2G;
+  float norm_accz = float(ax) / MPU_SENSITIVITY_2G;
+
+  float norm_gx = gx/131;
+  float norm_gy = gy/131.0;
+
+
 
   // Calculate Pitch & Roll from accelerometer (deg)
-  accPitch = -(atan2(acc.XAxis, sqrt(acc.YAxis*acc.YAxis + acc.ZAxis*acc.ZAxis))*180.0)/M_PI;
-  accRoll  = (atan2(acc.YAxis, acc.ZAxis)*180.0)/M_PI;
+  accPitch = -(atan2(norm_accx, sqrt(norm_accy*norm_accy + norm_accz * norm_accz))*180.0)/M_PI;
+  accRoll  = (atan2(norm_accy, norm_accz)*180.0)/M_PI;
 
   // Kalman filter
-  kalPitch = kalmanY.update(accPitch, gyr.YAxis);
-  kalRoll = kalmanX.update(accRoll, gyr.XAxis);
+  kalPitch = kalmanY.update(accPitch, norm_gy);
+  kalRoll = kalmanX.update(accRoll, norm_gx);
 
-  Serial.print(accPitch);
-  Serial.print(":");
-  Serial.print(accRoll);
-  Serial.print(":");
   Serial.print(kalPitch);
   Serial.print(":");
   Serial.print(kalRoll);
   Serial.print(":");
+
   Serial.println();
 }
+
