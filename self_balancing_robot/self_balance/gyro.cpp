@@ -1,20 +1,22 @@
 #include "gyro.h"
 #include "debug.h"
 #include <Wire.h>
-#include <MPU6050.h>
+#include <MPU6050_light.h>
 
-static MPU6050 mpu;
-static int16_t accX, accY, accZ, gyroX, gyroY, gyroZ;
+static MPU6050 mpu(Wire);
 
 int init_mpu(void){
-	Wire.begin(SDA, SCL);
-	debug_write("I2C SDA and SCL set to ");
-	mpu.initialize();
 	
-	if(!mpu.testConnection()){
-		debug_write("MPU6050 Not Found!!! Please connect and RST the controller");
-		return 0;
-	}
+	Wire.begin(SDA, SCL);
+	byte status = mpu.begin();
+	debug_write_f((float)status);
+	if(status!=0)
+		return false;
+	debug_write("5 seconds before calculating offsets.");
+	delay(5000);
+	debug_write("Calculating offsets");
+	// mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
+	mpu.calcOffsets(); // gyro and accelero
 	debug_write("MPU6050 Connected.");
 	return 1;
 }
@@ -28,10 +30,8 @@ int init_mpu(void){
 //to minimize acceleration, i need to minimize height from the ground. fuck it
 
 void update(float* pitch){
-
-	mpu.getMotion6(&accX, &accY, &accZ, &gyroX, &gyroY, &gyroZ);
-
-  //SOLDER THE CHIP PROPERLY - can get you nan values, and then idk what this will do.
-	*pitch = atan(-accX / sqrt(accY * accY + accZ * accZ)) * 180.0 / M_PI;
-
+	// put your main code here, to run repeatedly:
+	mpu.update();
+	*pitch = mpu.getAngleY();
+	debug_write_f(*pitch);
 }

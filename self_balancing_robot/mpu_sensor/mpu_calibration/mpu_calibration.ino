@@ -73,9 +73,9 @@ void loop()
 
   Serial.print(kalPitch);
   Serial.print(":");
-  Serial.print(kalRoll);
-  Serial.print(":");
 
   Serial.println();
+
+  delay(1000);
 }
 

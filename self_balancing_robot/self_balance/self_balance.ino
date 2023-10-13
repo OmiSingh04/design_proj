@@ -16,7 +16,7 @@ void setup_bt(){
 }
 
 void setup(){
-    Serial.begin(19200);
+    Serial.begin(9600);
     setup_bt();
 
     //wait for the bluetooth connection
@@ -28,6 +28,7 @@ void setup(){
     //any info received through bt_serial is solely commands for the robot.
 
     if(!init_mpu()){//dont run.
+        debug_write("MPU6050 not found!");
         while(1) delay(1000);
     }
 

@@ -63,3 +63,15 @@ x Hz = x pulses per second
 I hate this man.
 
 Realized no sleep pins needed.
+
+
+
+
+Ok.
+
+
+Three tasks to finish by friday, saturday and sunday.
+
+1) PID LIBRARY RATHER THAN A SELF WRITTEN LIBRARY. (something not very basic/naive)
+2) Kalman filter (using a library)
+3) Interface for control. Stage 1 is no controlled movement. Only receiving debug information. Also setting PID values through this interface, for ease during pid tuning.
