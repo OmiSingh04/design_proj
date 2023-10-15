@@ -1,0 +1,77 @@
+Pins - 
+We have 8 pins for both the motors. (4 each)
+(Left Motor Driver - Direction, Step, Vcc, GND)
+(Right Motor Driver - Direction, Step, Vcc, GND)
+
+We have 4 pins for the MPU6050 - (Vcc, GND, SCL, SDA)
+
+We need a power supply for both the motors too. (VMot, GND) But those wont be connected to the esp32.
+
+Moreover, the Vcc and GND can be supplied by the common 3v3 Pin and GND pin on the esp32.
+
+Meaning we have to select 3 pins for each driver = 6 pins, and 2 pins for the sensor (MPU6050).
+
+6 unique pins + 2 (Vcc and GND) = 8 pins from the esp32 in total.
+
+
+
+
+
+When tuning the PID (Proportional-Integral-Derivative) control values for a self-balancing two-wheeled robot, you'll want to find the right balance of Kp, Ki, and Kd to ensure stable and responsive control. The expected observations of large or low values for these parameters are as follows:
+
+
+Values i can obtain from the MPU6050 are - 
+	i) Instantaneous Angular Velocity Values.  - rad/sec
+	ii) Instantaneous Acceleration Values (Includes Gravity) - m/s^2
+
+
+I can either do it directly with Angular Velocities as reference for my error term. 
+0 - being the set point. When there is no angular velocity, i assume my bot is upright. But the bot is not necessarily upright even if ang. vel is 0.
+But, for Stage - 1, the bot is going to oscillate a lot, in order to keep reducing the error term to 0.
+
+NONOOOOOOONONON
+i just realized. 
+That assumption is just badd.
+Even when i am at the mean position, angular velocity will not be 0. error will not be 0. I need a setpoint of 0 at mean position. Only angle can achieve that.
+
+Angle on the other hand, is very good.
+
+ChatGPT says its good!!?? HOw??
+
+No bro. Angle. Angle is the way.
+
+
+Problem 1 - Convert Frequency to pulse width.
+
+1000 Hz - 1000 pulses in 1 second.
+
+Time period of a pulse = 1/1000 second.
+pulse width = 1/2000 second.
+1/2000 HIGH, 1/2000 LOW = 1 pulse
+
+1000 HIGH, 1000 LOW = 2000 /2000 = 1 second
+
+
+For any arbitrary frequency x Hz,
+
+x Hz = x pulses per second
+1/x seconds per pulse
+
+1/2x seconds HIGH, 1/2x seconds LOW
+
+
+I hate this man.
+
+Realized no sleep pins needed.
+
+
+
+
+Ok.
+
+
+Three tasks to finish by friday, saturday and sunday.
+
+1) PID LIBRARY RATHER THAN A SELF WRITTEN LIBRARY. (something not very basic/naive)
+2) Kalman filter (using a library)
+3) Interface for control. Stage 1 is no controlled movement. Only receiving debug information. Also setting PID values through this interface, for ease during pid tuning.

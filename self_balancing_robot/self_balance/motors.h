@@ -10,7 +10,7 @@
 
 void setup_motors();
 void set_direction(int, int);
-void step(int, float);
+void step(int, double);
 
 //at what rate is my control being generated?
 #endif

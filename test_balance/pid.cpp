@@ -7,7 +7,7 @@ static double kp = 0, kd = 0, ki = 0;
 static double setpoint = 0;
 static double input = 0, output = 0;
 
-static PID pid(&input, &output, &setpoint, kp, ki, kd, P_ON_M, REVERSE);
+static PID pid(&input, &output, &setpoint, kp, ki, kd, P_ON_M, DIRECT);
 
 void set_param(double kp_, double ki_, double kd_){
     pid.SetTunings(kp_, ki_, kd_);
@@ -17,8 +17,7 @@ void set_param(double kp_, double ki_, double kd_){
 
 
 double generate_control(double angle){ //We now input the pitch angle.
-    double input = angle;
+    input = angle;
     pid.Compute();
-    debug_write("Control : ");
     return output;
 }
