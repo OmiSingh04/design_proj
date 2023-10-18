@@ -26,8 +26,3 @@ def wait_for_pid():
         if event == sg.WIN_CLOSED:
             window.close()
             return None
-
-
-def setup_debug_window():
-    global window
-    
