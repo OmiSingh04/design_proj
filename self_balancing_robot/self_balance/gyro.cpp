@@ -7,18 +7,18 @@ static MPU6050 mpu(Wire);
 
 int init_mpu(void){
 	
-	Wire.begin(SDA, SCL);
-	byte status = mpu.begin();
-	debug_write(String(status));
-	if(status!=0)
-		return false;
-	debug_write("Init:5 seconds before calculating offsets.");
-	delay(5000);
-	debug_write("Init:Calculating offsets");
+    Wire.begin(SDA, SCL);
+	  byte status = mpu.begin();
+	  debug_write("MPU status: " + String(status));
+	  if(status!=0)
+		    return false;
+	  debug_write("Init:5 seconds before calculating offsets.");
+	  delay(5000);
+	  debug_write("Init:Calculating offsets");
 	// mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
-	mpu.calcOffsets(); // gyro and accelero
-	debug_write("Init:MPU6050 Connected.");
-	return 1;
+	  mpu.calcOffsets(); // gyro and accelero
+	  debug_write("Init:MPU6050 Connected.");
+	  return 1;
 }
 
 //actually... the acceleration values will be distorted a lot...
@@ -31,6 +31,6 @@ int init_mpu(void){
 
 void update(double* pitch){
 	// put your main code here, to run repeatedly:
-	mpu.update();
-	*pitch = mpu.getAngleY();
+	  mpu.update();
+	  *pitch = mpu.getAngleY();
 }

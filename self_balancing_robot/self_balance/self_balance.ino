@@ -3,12 +3,13 @@
 #include "pid.h"
 #include "motors.h"
 #include "gyro.h"
-const char* pin = "1234";//still dont know how this shit is gonna be used.
-const char* device_name = "ESP-32-Stabletron";
+
+#define DEBUG_MODE //define this macro, if working in debug mode -> accept values of kp, ki and kd
 
 BluetoothSerial bt_serial;
-
-double pitch;
+double kp, ki, kd;
+int step;
+int control_scale;
 
 void setup_bt(){
     bt_serial.begin(device_name);
@@ -18,6 +19,9 @@ void setup_bt(){
 void setup(){
     Serial.begin(9600);
     setup_bt();
+
+    const char* pin = "1234";//still dont know how this shit is gonna be used.
+    const char* device_name = "ESP-32-Stabletron";  
 
     //wait for the bluetooth connection
     while(!bt_serial.connected())
@@ -35,22 +39,21 @@ void setup(){
     //accept parameters from the application.
     //4 values - ki, kp, kd, and scale_control
 
-    
+    get_tuning_values();//if in debug mode, get values from application
 
-    set_param(1, 0, 0.5);//idk have to change...
-
+    debug_write("kp:" + String(kp) + ",ki:" + String(ki) + ",kd:" + String(kd));
+    set_param(kp, ki, kd);//idk have to change...
     setup_motors();
     debug_write("Ready to Departure!");
-
 }
 
 void loop(){
-
     //read sensor values
+    double pitch;
     update(&pitch);
 
     //generate control
-    float control = generate_control(pitch);//based on which way the chip is placed, we will either need pitch or roll
+    double control = generate_control(pitch);//based on which way the chip is placed, we will either need pitch or roll
     debug_write("pitch:" + String(pitch) + ",control:" + String(control));
 
     //the output could be motor speed. + and negative for direction. so i need to translate the output of pid to 
