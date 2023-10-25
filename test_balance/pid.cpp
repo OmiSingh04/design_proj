@@ -2,8 +2,7 @@
 #include "debug.h"
 #include <PID_v1.h>
 
-
-static double kp = 0, kd = 0, ki = 0;
+e
 static double setpoint = 0;
 static double input = 0, output = 0;
 

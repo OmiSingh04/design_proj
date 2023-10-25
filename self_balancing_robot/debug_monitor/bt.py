@@ -48,10 +48,10 @@ def read_bt():
         if r.startswith('Init:'):
             write_message(r)
 
-        if(r.startswith('Error:'):
+        if(r.startswith('Error:')):
             write_message(r)
             break
 
-        if(message.startswith("pitch:"))
+        if(r.startswith("pitch:")):
             write_pitch_control(r.split(",")[0].split(":")[1], r.split(",")[1].split(":")[1])
 

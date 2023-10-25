@@ -36,7 +36,10 @@ void step(int count, double frequency){
   if(frequency == 0) return;
   //frequency is a value between -20 and 20
   double pulse_width = 1000.0 / (2 * frequency);
-  Serial.println(pulse_width);//oh its in seconds. convert to milliseconds
+
+  if(pulse_width > 200)
+    pulse_width = 200;
+  
     for(int i = 0; i < count; i++){
         digitalWrite(LEFT_MOTOR_STEP_PIN, HIGH);
         digitalWrite(RIGHT_MOTOR_STEP_PIN, HIGH);

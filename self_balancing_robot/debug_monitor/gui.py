@@ -1,10 +1,13 @@
 import PySimpleGUI as sg
+from file_manage import * 
+import sys
 
 layout_pid_input = [
     [sg.Text("KP", size = (10, 1)), sg.InputText()],
     [sg.Text("KI"), sg.InputText()],
     [sg.Text("KD"), sg.InputText()],
-    [sg.Button("OK")]
+    [sg.Button("OK")],
+    [sg.Button("Use previous values")]
 ]
 
 
@@ -21,7 +24,13 @@ def wait_for_pid():
         event, values = window.read()
         if event == 'OK':
             window.close()
+            write_pid_values(values[0],  values[1],  values[2])
             return values
+
+        if event == "Use previous values":
+            values = read_pid_values()
+            print(values)
+            sys.exit(0)
 
         if event == sg.WIN_CLOSED:
             window.close()
