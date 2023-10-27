@@ -5,8 +5,6 @@
 #include "gyro.h"
 
 
-
-
 char* device_name = "ESP-32-Stabletron";
 char* pin = "1234";
 
@@ -58,8 +56,6 @@ void loop(){
     update(&pitch);
 
     double control = generate_control(pitch);//based on which way the chip is placed, we will either need pitch or roll
-    if(pitch < 3 && pitch > -3)
-      control = 0;
     //the output could be motor speed. + and negative for direction. so i need to translate the output of pid to 
     //i hope i can find the linear relation pretty well.
     //actuate control

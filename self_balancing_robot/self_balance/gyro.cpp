@@ -6,7 +6,6 @@
 static MPU6050 mpu(Wire);
 
 int init_mpu(void){
-	
     Wire.begin(SDA, SCL);
 	  byte status = mpu.begin();
 	  debug_write("MPU status: " + String(status));

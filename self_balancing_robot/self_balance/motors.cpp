@@ -38,7 +38,7 @@ void step(int count, double frequency){
   double pulse_width = 1000.0 / (2 * frequency);
 
   if(pulse_width > 200)
-    pulse_width = 200;
+    return;
   
     for(int i = 0; i < count; i++){
         digitalWrite(LEFT_MOTOR_STEP_PIN, HIGH);

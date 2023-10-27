@@ -1,8 +1,3 @@
-#something that
-#supports multiple windows (preferrably)
-#logs texts
-#has textboxes for inputs
-
 from file_manage import *
 import struct
 import sys

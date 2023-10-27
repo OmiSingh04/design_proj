@@ -1,10 +1,10 @@
-from gui import *
 import sys
 from bt import * 
 
-window = setup_pid_window()
-    
-values = wait_for_pid()
+values = [0, 0, 0]
+values[0] = input("KP:")
+values[1] = input("KI:")
+values[2] = input("KD:")
 
 if values is None:
     print("No values read!")
@@ -17,8 +17,4 @@ if(not connect()):
 write_pid(values[0], values[1], values[2])
 print("Written values")
 
-
 read_bt()
-
-
-
